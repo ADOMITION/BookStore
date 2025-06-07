@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.books.mapper.GuestbookMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.books.entity.Guestbook">
+        <id column="id" property="id" />
+        <result column="content" property="content" />
+        <result column="user_id" property="userId" />
+        <result column="create_time" property="createTime" />
+        <result column="admin_id" property="adminId" />
+        <result column="admin_reply" property="adminReply" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, content, user_id, create_time, admin_id, admin_reply, update_time
+    </sql>
+    <select id="countByUserId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM guestbook WHERE user_id = #{userId}
+    </select>
+
+</mapper>

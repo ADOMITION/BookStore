@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.books.mapper.ReviewMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.books.entity.Review">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="book_id" property="bookId" />
+        <result column="content" property="content" />
+        <result column="createtime" property="createtime" />
+        <result column="like_count" property="likeCount" />
+        <result column="reply_count" property="replyCount" />
+        <result column="mark" property="mark" />
+
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, book_id, content, createtime, like_count, reply_count, mark
+    </sql>
+
+    <select id="selectReviewsWithUser" resultType="com.books.entity.Review">
+        SELECT r.*, u.name as user_name,u.avatar as avatar FROM review r
+            LEFT JOIN user u ON r.user_id = u.id
+            WHERE r.book_id = #{bookId} ORDER BY r.createtime DESC
+    </select>
+
+    <select id="selectHotReviews" resultType="com.books.entity.Review">
+        SELECT r.*, u.name as user_name, u.avatar as avatar FROM review r
+            LEFT JOIN user u ON r.user_id = u.id
+        WHERE r.createtime >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        ORDER BY (r.like_count + r.reply_count * 0.5) DESC
+            LIMIT 20
+    </select>
+
+
+    <select id="findReviewPage" resultType="com.books.entity.Review">
+        SELECT
+        r.*,
+        u.name AS user_name,
+        u.avatar,
+        b.name AS book_name
+        FROM review r
+        LEFT JOIN user u ON r.user_id = u.id
+        LEFT JOIN book b ON r.book_id = b.id
+        <where>
+            <if test="bookName != null ">
+                AND b.name LIKE CONCAT('%', #{bookName}, '%')
+            </if>
+            <if test="userName != null ">
+                AND u.name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+        </where>
+        ORDER BY r.createtime DESC
+    </select>
+    <select id="findUserReviews" resultType="com.books.entity.Review">
+        SELECT r.*, b.name as book_name FROM review r
+            LEFT JOIN book b ON r.book_id = b.id
+        WHERE r.user_id = #{userId} AND r.status = #{status}
+        order by r.createtime desc
+    </select>
+
+</mapper>

@@ -1,0 +1,18 @@
+server:
+  port: 8090
+spring:
+  #文件上传
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+  datasource:
+    url: jdbc:mysql://localhost:3306/bookhome?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone = GMT
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+mybatis-plus:
+  configuration:
+      map-underscore-to-camel-case: true
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
